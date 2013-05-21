@@ -4,34 +4,35 @@
 			<li>
 				<h3>Acciones</h3>
 				<ul class="links">
-					<li><a href=[% acciones.agregar %]>Agregar producto</a>
-					<li><a href=[% acciones.listar %]>Listar productos</a>
+					<li><a href=<% acciones.agregar %>>Agregar producto</a>
+					<li><a href=<% acciones.listar %>>Listar productos</a>
 				</ul>
 			</li>
 		</ul>	
 	</div>
 
 	<div id="content">
-		<div id="header" class="[% tipo %]_header">
-			<h1>[% encabezado %]</h1>
+		<div id="header" class="<% IF producto.id %>modificar_header<% ELSE %>agregar_header<% END %>">
+			<h1><% encabezado %></h1>
 		</div>
 		<div id="getting-started">
-			[% IF msg.warning %]
-			<div class=warning> 
+			<% IF flash %>
+			<div class="messages">
 				<ul>
-					[% FOREACH m IN msg.warning %]
-						<li>[% m %]</li>
-					[% END %]
-				</ul> 
+					<% FOR message = flash.pairs %>
+					<% FOR text = message.value %>
+					<li class="<% message.key | html %>"><span><% text | html %></span></li>
+					<% END %>
+				<% END %>
+				</ul>
 			</div>
-			[% END %]
-			<form action=[% acciones.guardar %] method="POST">
-				<label>Nombre:</label><input type="text" name="nombre" value="[% producto.nombre %]"/><br/>
-				<label>Precio:</label><input type="text" name="precio" value="[% producto.precio %]"/><br/>
-				[% IF producto.id %]
-				<input type="hidden" name="id" value="[% producto.id %]"/>
-				[% END %]
-				<input type="hidden" name="tipo" value="[% tipo %]"/>
+			<% END %>
+			<form action=<% acciones.guardar %> method="POST">
+				<label>Nombre:</label><input type="text" name="nombre" value="<% producto.nombre %>"/><br/>
+				<label>Precio:</label><input type="text" name="precio" value="<% producto.precio %>"/><br/>
+				<% IF producto.id %>
+				<input type="hidden" name="id" value="<% producto.id %>"/>
+				<% END %>
 				<input type="submit" value="Guardar"/>
 			</form>
 		</div>

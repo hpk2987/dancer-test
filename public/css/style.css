@@ -237,28 +237,13 @@ font-size: 10px;
 
 /* MENSAJES FLASH */
 
-.error
+.messages
 { 
 background: #CEE5F5;
-padding: 0.5em;
-border: 1px solid #AACBE2; 
-color: #ff0000;
+border: 1px solid #AACBE2;
 }
 
-.warning
-{ 
-background: #CEE5F5;
-padding: 0.5em;
-border: 1px solid #AACBE2; 
-color: #CBCF5D;
-}
-
-
-.info
-{ 
-background: #CEE5F5;
-padding: 0.5em;
-border: 1px solid #AACBE2; 
-color: #000000;
-}
+div.messages li.warning span{color: #CBCF5D;}
+div.messages li.info span{color: #000000;}
+div.messages li.error span{color: #FF0000;}
 

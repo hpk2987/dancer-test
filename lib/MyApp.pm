@@ -1,9 +1,10 @@
 package MyApp;
 use Dancer ':syntax';
 use Dancer::Plugin::Database;
-use Dancer::Plugin::FlashMessage;
+use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::ValidateTiny;
 
+#version de la aplicacion
 our $VERSION = '0.1';
 
 get '/' => sub {
@@ -20,43 +21,15 @@ my $acc_productos = {
 
 get $acc_productos->{'listar'} => sub {
 	my @prods = database->quick_select('producto',{});
-	
-	# No deberia hacer falta pero lo que
-	# indica el tutorial de FlashMessage no funciona
-	my $msg = {
-		error => flash('error'),
-		warning => flash('warning'),
-		info => flash('info'),
-	};
 
     template 'productos' => {
 		productos => [@prods],
 		acciones => $acc_productos,
-		msg => $msg,
     };
 };
 
 post $acc_productos->{'modificar'} => sub{
-	my $producto = database->quick_select(
-						'producto',
-						{id => params->{'id'}});
-
-	# No deberia hacer falta pero lo que
-	# indica el tutorial de FlashMessage no funciona
-	my $msg = {
-		error => flash('error'),
-		warning => flash('warning'),
-		info => flash('info'),
-	};
-
-
-	template 'producto' => {
-		encabezado => 'Modificar producto',
-		tipo => 'modificar',
-		producto => $producto,
-		acciones => $acc_productos,
-		msg => $msg,
-	}
+	return forward $acc_productos->{'agregar'},params,{method => 'POST'};
 };
 
 post $acc_productos->{'guardar'} => sub{
@@ -66,51 +39,61 @@ post $acc_productos->{'guardar'} => sub{
 	};
     # Validating params with rule file
     my $data = validator($vparams, 'ValidarProducto.pl');
-	my $origen = $acc_productos->{params->{'tipo'}};
 
 	if($data->{valid}){
-#		if(exists params->{'id'}){
-#			database->quick_update
-#				('producto',
-#				{id => params->{'id'}},
-#				{nombre => params->{'nombre'},
-#				 precio => params->{'precio'}});
-#		}else{
-#			database->quick_insert
-#				('producto',
-#				{nombre => params->{'nombre'},
-#				 precio => params->{'precio'}});
-#		}
-#
-#		flash info => ["El producto se almaceno correctamente"];
-#		redirect $acc_productos->{'listar'};
+		if(exists params->{'id'}){
+			database->quick_update
+				('producto',
+				{id => params->{'id'}},
+				{nombre => params->{'nombre'},
+				 precio => params->{'precio'}});
+		}else{
+			database->quick_insert
+				('producto',
+				{nombre => params->{'nombre'},
+				 precio => params->{'precio'}});
+		}
+
+		flash info => "El producto se almaceno correctamente";
+		redirect $acc_productos->{'listar'};
 	}else{
-		flash warning => [values($data->{'result'})];
-		forward $origen;
+		while ( (my $key,my $value) = each $data->{'result'} ){	
+			# Solo interesan los errores no los valores ingresados
+			if($key =~ /^err_/){
+				flash warning => $value;
+			}
+		}
+		# Podrian devolverse los params para que no se pierda lo ingresado
+		forward $acc_productos->{'agregar'},{params};
 	}
 };
 
 any ['post','get'] => $acc_productos->{'agregar'} => sub{
-	# No deberia hacer falta pero lo que
-	# indica el tutorial de FlashMessage no funciona
-	my $msg = {
-		error => flash('error'),
-		warning => flash('warning'),
-		info => flash('info'),
-	};
+	if(params->{'id'} && is_post()){
+		my $producto = database->quick_select(
+						'producto',
+						{id => params->{'id'}});
 
-	template 'producto' =>{
-		encabezado => 'Agregar producto',
-		tipo => 'agregar',
-		acciones => $acc_productos,
-		msg => $msg,
-	};
+		template 'producto' => {
+			encabezado => 'Modificar producto',
+			producto => $producto,
+			acciones => $acc_productos,
+		}
+	}else{
+		my $producto = params;
+
+		template 'producto' =>{
+			encabezado => 'Agregar producto',
+			producto => $producto,
+			acciones => $acc_productos,
+		};
+	}
 };
 
 post $acc_productos->{'eliminar'} => sub{
 	database->quick_delete('producto', { id => params->{'id'} });
 
-	flash info => ["El producto se elimino correctamente"];
+	flash info => "El producto se elimino correctamente";
 	redirect $acc_productos->{'listar'};
 };
 

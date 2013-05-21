@@ -22,7 +22,7 @@ session: "simple"
 # simple: default and very basic template engine
 # template_toolkit: TT
 
-template: "tiny"
+template: "template_toolkit"
 
 # Configurar el plugin de conexion con la base de datos
 
@@ -37,5 +37,8 @@ plugins:
         rules_dir: lib/validacion
         error_prefix: err_
         is_full: 0
+
+    FlashNote:
+      queue: key_multiple
 
 

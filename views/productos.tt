@@ -4,8 +4,8 @@
 			<li>
 				<h3>Acciones</h3>
 				<ul class="links">
-					<li><a href=[% acciones.agregar %]>Agregar producto</a></li>
-					<li><a href=[% acciones.listar %]>Listar productos</a></li>
+					<li><a href=<% acciones.agregar %>>Agregar producto</a></li>
+					<li><a href=<% acciones.listar %>>Listar productos</a></li>
 				</ul>
 			</li>
 		</ul>	
@@ -16,33 +16,17 @@
 			<h1>Listar productos</h1>
 		</div>
 		<div id="getting-started">
-			[% IF msg.error %]
-			<div class=error> 
+			<% IF flash %>
+			<div class="messages">
 				<ul>
-					[% FOREACH m IN msg.error %]
-						<li>[% m %]</li>
-					[% END %]
+					<% FOR message = flash.pairs %>
+					<% FOR text = message.value %>
+					<li class="<% message.key | html %>"><span><% text | html %></span></li>
+					<% END %>
+				<% END %>
 				</ul>
 			</div>
-		 	[% END %]
-			[% IF msg.warning %]
-			<div class=warning> 
-				<ul>
-					[% FOREACH m IN msg.warning %]
-						<li>[% m %]</li>
-					[% END %]
-				</ul> 
-			</div>
-		 	[% END %]
-			[% IF msg.info %]
-			<div class=info> 
-				<ul>
-					[% FOREACH m IN msg.info %]
-						<li>[% m %]</li>
-					[% END %]
-				</ul>
-			</div>
-		 	[% END %]
+			<% END %>
 			<table id="hor-minimalist-b">
 				<thead>
 					<tr>
@@ -52,24 +36,24 @@
 						<th scope="col"></th>
 					</tr>
 				</thead>
-				[% FOREACH producto IN productos %]
+				<% FOREACH producto IN productos %>
 				<tr>
-					<td>[% producto.nombre %]</td>
-					<td>[% producto.precio %]</td>
+					<td><% producto.nombre %></td>
+					<td><% producto.precio %></td>
 					<td>
-						<form action=[% acciones.modificar %] method="POST">
-							<input type="hidden" name="id" value="[% producto.id %]"/>
+						<form action=<% acciones.modificar %> method="POST">
+							<input type="hidden" name="id" value="<% producto.id %>"/>
 							<input type="submit" value="Modificar"/>
 						</form>
 					</td>
 					<td>
-						<form action=[% acciones.eliminar %] method="POST">
-							<input type="hidden" name="id" value="[% producto.id %]"/>
+						<form action=<% acciones.eliminar %> method="POST">
+							<input type="hidden" name="id" value="<% producto.id %>"/>
 							<input type="submit" value="Eliminar"/>
 						</form>
 					</td>
 				</tr>
-				[% END %]
+				<% END %>
 			</table>
 		</div>
 	</div>
