@@ -1,7 +1,10 @@
+Para poder ejecutar el proyecto se deben cumplir
+las siguientes dependencias:
+
 Dancer
 Dancer-Template-Tiny
 Dancer-Plugin-Database
-Dancer-Plugin-FlashMessage
+Dancer-Plugin-FlashNote
 Dancer-Plugin-ValidateTiny
 YAML
 DBD-mysql
