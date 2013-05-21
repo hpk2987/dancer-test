@@ -1,19 +1,73 @@
-<div id="page>
-	<div id="sidebar"/>
+<div id="page">
+	<div id="sidebar">
+		<ul id="sidebar-items">
+			<li>
+				<h3>Acciones</h3>
+				<ul class="links">
+					<li><a href=[% acciones.agregar %]>Agregar producto</a></li>
+					<li><a href=[% acciones.listar %]>Listar productos</a></li>
+				</ul>
+			</li>
+		</ul>	
+	</div>
+
 	<div id="content">
-		<div id="header">
-			<h1>Header</h1>
+		<div id="header" class="producto_header">
+			<h1>Listar productos</h1>
 		</div>
 		<div id="getting-started">
-			<table>
-				<tr>
-					<th>Nombre</th>
-					<th>Precio</th>
-				</tr>
+			[% IF msg.error %]
+			<div class=error> 
+				<ul>
+					[% FOREACH m IN msg.error %]
+						<li>[% m %]</li>
+					[% END %]
+				</ul>
+			</div>
+		 	[% END %]
+			[% IF msg.warning %]
+			<div class=warning> 
+				<ul>
+					[% FOREACH m IN msg.warning %]
+						<li>[% m %]</li>
+					[% END %]
+				</ul> 
+			</div>
+		 	[% END %]
+			[% IF msg.info %]
+			<div class=info> 
+				<ul>
+					[% FOREACH m IN msg.info %]
+						<li>[% m %]</li>
+					[% END %]
+				</ul>
+			</div>
+		 	[% END %]
+			<table id="hor-minimalist-b">
+				<thead>
+					<tr>
+						<th scope="col">Nombre</th>
+						<th scope="col">Precio</th>
+						<th scope="col"></th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
 				[% FOREACH producto IN productos %]
 				<tr>
 					<td>[% producto.nombre %]</td>
 					<td>[% producto.precio %]</td>
+					<td>
+						<form action=[% acciones.modificar %] method="POST">
+							<input type="hidden" name="id" value="[% producto.id %]"/>
+							<input type="submit" value="Modificar"/>
+						</form>
+					</td>
+					<td>
+						<form action=[% acciones.eliminar %] method="POST">
+							<input type="hidden" name="id" value="[% producto.id %]"/>
+							<input type="submit" value="Eliminar"/>
+						</form>
+					</td>
 				</tr>
 				[% END %]
 			</table>

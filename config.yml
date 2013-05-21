@@ -14,9 +14,28 @@ layout: "main"
 # about unicode within your app when this setting is set (recommended).
 charset: "UTF-8"
 
+# Configurar el motor de manejo de sesiones
+
+session: "simple"
+
 # template engine
 # simple: default and very basic template engine
 # template_toolkit: TT
 
 template: "tiny"
+
+# Configurar el plugin de conexion con la base de datos
+
+plugins:
+    Database:
+        driver: 'mysql'
+        database: 'mydb'
+        username: 'prueba'
+        password: 'prueba'
+
+    ValidateTiny:
+        rules_dir: lib/validacion
+        error_prefix: err_
+        is_full: 0
+
 
