@@ -29,7 +29,7 @@ get $acc_productos->{'listar'} => sub {
 };
 
 post $acc_productos->{'modificar'} => sub{
-	return forward $acc_productos->{'agregar'},params,{method => 'POST'};
+	return forward $acc_productos->{'agregar'},{params},{method => 'POST'};
 };
 
 post $acc_productos->{'guardar'} => sub{
@@ -69,7 +69,7 @@ post $acc_productos->{'guardar'} => sub{
 };
 
 any ['post','get'] => $acc_productos->{'agregar'} => sub{
-	if(params->{'id'} && is_post()){
+	if(params->{'id'} && request->is_post()){
 		my $producto = database->quick_select(
 						'producto',
 						{id => params->{'id'}});
